@@ -355,11 +355,14 @@
       }, 2300);
     }
 
-  // Ketika halaman register dibuka, dorong 1 state ke history
+  if (document.referrer === "" || !document.referrer.includes("login.html")) {
+    window.location.href = "login.html";
+  }
+
+  // 2. Paksa back button kembali ke login
   history.pushState(null, null, location.href);
 
   window.addEventListener("popstate", function () {
-    // Kalau user pencet tombol back HP → arahkan ke login.html
     window.location.href = "login.html";
   });
 
