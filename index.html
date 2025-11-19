@@ -92,8 +92,7 @@
 
     /* Track bar */
     .loading-bar {
-      width: 65%;
-      max-width: 260px;
+      width: min(80%, 300px);   /* ← Lebih fleksibel */
       height: 36px;
       border-radius: 999px;
       background: rgba(232, 155, 74, 0.7);
@@ -111,6 +110,12 @@
       height: 100%;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
       animation: shimmer 2s infinite;
+    }
+
+    @media screen and (max-width: 380px) {
+    .loading-text {
+      font-size: 1rem;
+      }
     }
 
     @keyframes shimmer {
@@ -143,7 +148,7 @@
       font-size: 1.15rem;
       letter-spacing: 0.5px;
       pointer-events: none;
-      white-space: nowrap;
+      white-space: nowrap;   /* ← FIX TERPENTING */
     }
 
     .dots {
