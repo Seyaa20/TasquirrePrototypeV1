@@ -13,45 +13,48 @@
       --text-main: #5a2c13;
       --text-sub: #a96b3d;
       --accent: #c5652c;
-      --accent-soft: #ffe1c2;
       --panel-grad: linear-gradient(180deg, #FFE7CB, #F0B580);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    /* BODY FIX — supaya toast selalu center viewport */
     body {
       background: var(--bg);
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
       min-height: 100vh;
       font-family: "Poppins", sans-serif;
+      position: relative;
+      overflow-x: hidden;
     }
 
-    /* === DISSOLVE GENTLE === */
-.screen {
-  width: 100%;
-  max-width: 428px;
-  background: var(--bg);
-  min-height: 100vh;
-  padding: 1.5rem;
-  overflow-y: auto;
+    /* WRAPPER supaya phone-frame tetap center */
+    .wrapper {
+      display: flex;
+      justify-content: center;
+      padding-top: 1rem;
+    }
 
-  position: relative;
-  /* HP FRAME LOOK */
-  border-radius: 32px;
-  box-shadow: 0 24px 60px rgba(0,0,0,0.15);
+    /* PHONE SCREEN */
+    .screen {
+      width: 100%;
+      max-width: 428px;
+      min-height: 100vh;
+      background: var(--bg);
+      padding: 1.5rem;
 
-  /* dissolve gentle */
-  opacity: 1;
-  filter: blur(0px);
-  transition: opacity 0.45s ease, filter 0.45s ease;
-}
+      border-radius: 32px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.15);
+      overflow-y: auto;
 
-.screen.fade-out {
-  opacity: 0;
-  filter: blur(12px);
-}
+      opacity: 1;
+      filter: blur(0px);
+      transition: opacity 0.45s ease, filter 0.45s ease;
+    }
+
+    .screen.fade-out {
+      opacity: 0;
+      filter: blur(12px);
+    }
 
     /* HEADER */
     .welcome-block {
@@ -62,25 +65,9 @@
       margin-bottom: 0.6rem;
     }
 
-    .w-top {
-      font-size: 2.6rem;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .w-mid {
-      font-size: 1.1rem;
-      font-weight: 500;
-      color: var(--text-sub);
-      margin-top: -2px;
-      margin-bottom: -2px;
-    }
-
-    .w-bottom {
-      font-size: 2.6rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
+    .w-top { font-size: 2.6rem; font-weight: 700; color: var(--text-main); }
+    .w-mid { font-size: 1.1rem; color: var(--text-sub); margin-top: -2px; margin-bottom: -2px; }
+    .w-bottom { font-size: 2.6rem; font-weight: 700; color: var(--accent); }
 
     .subtitle-line {
       margin-top: 0.2rem;
@@ -88,7 +75,6 @@
       font-size: 1.05rem;
       color: var(--text-sub);
       text-align: center;
-      font-weight: 500;
       font-style: italic;
     }
 
@@ -132,16 +118,8 @@
       gap: 8px;
     }
 
-    .google {
-      background: #fff;
-      border: 1px solid #ddd;
-      color: #444;
-    }
-
-    .fb {
-      background: #3b5998;
-      color: #fff;
-    }
+    .google { background: #fff; border: 1px solid #ddd; color: #444; }
+    .fb { background: #3b5998; color: #fff; }
 
     .divider-row {
       display: flex;
@@ -163,11 +141,6 @@
       margin-bottom: 4px;
       color: var(--text-main);
       font-weight: 600;
-      display: block;
-    }
-
-    .input-wrapper {
-      margin-bottom: 1rem;
     }
 
     .input-wrapper input {
@@ -177,6 +150,7 @@
       border: 1px solid rgba(199,101,40,0.35);
       background: #fff;
       font-size: 1rem;
+      margin-bottom: 1rem;
       outline: none;
     }
 
@@ -184,7 +158,6 @@
       font-size: 0.85rem;
       display: flex;
       justify-content: space-between;
-      align-items: center;
       margin-bottom: 1rem;
     }
 
@@ -220,122 +193,113 @@
       text-decoration: none;
     }
 
-    /* TOAST */
-/* TOAST (inside the phone screen) */
-/* TOAST CENTERED */
-/* TOAST CENTERED — BIGGER VERSION */
-/* FULL-VERTICAL POPUP */
-.toast {
-  position: fixed;              
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) scale(0.85);
+    /* TOAST FIX — always center screen */
+    .toast {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.85);
 
-  width: 80%;
-  max-width: 320px;
+      width: 80%;
+      max-width: 320px;
 
-  background: rgba(197, 101, 44, 0.95);
-  color: #fff;
-  padding: 20px 22px;
-  border-radius: 18px;
+      background: rgba(197, 101, 44, 0.95);
+      color: #fff;
+      padding: 20px 22px;
+      border-radius: 18px;
 
-  text-align: center;
-  font-size: 1.1rem;
-  font-weight: 600;
-  line-height: 1.45;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+      line-height: 1.45;
 
-  opacity: 0;
-  pointer-events: none;
+      opacity: 0;
+      pointer-events: none;
 
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
-  transition: opacity 0.35s ease, transform 0.35s ease;
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
+      transition: opacity 0.35s ease, transform 0.35s ease;
 
-  z-index: 99999; /* paling atas */
-}
+      z-index: 999999;
+    }
 
-.toast.show {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-
-
-
-
-
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
   </style>
 </head>
 
 <body>
-  <div class="screen">
 
-    <header class="simple-header">
-      <h1 class="welcome-block">
-        <span class="w-top">Welcome</span>
-        <span class="w-mid">to</span>
-        <span class="w-bottom">Tasquirre</span>
-      </h1>
+  <div class="wrapper">
+    <div class="screen">
 
-      <p class="subtitle-line">“Open for All, Done by All”</p>
+      <header class="simple-header">
+        <h1 class="welcome-block">
+          <span class="w-top">Welcome</span>
+          <span class="w-mid">to</span>
+          <span class="w-bottom">Tasquirre</span>
+        </h1>
 
-      <img src="tupai.png.png" class="header-logo" />
-    </header>
+        <p class="subtitle-line">“Open for All, Done by All”</p>
 
-    <main class="auth-main">
-      <section class="auth-panel">
+        <img src="tupai.png.png" class="header-logo" />
+      </header>
 
-        <h2 class="section-title">Login</h2>
+      <main class="auth-main">
+        <section class="auth-panel">
 
-        <button class="btn-social google" onclick="goHome()">
-          <i class="bx bxl-google"></i> Continue with Google
-        </button>
+          <h2 class="section-title">Login</h2>
 
-        <button class="btn-social fb" onclick="goHome()">
-          <i class="bx bxl-facebook"></i> Continue with Facebook
-        </button>
+          <button class="btn-social google" onclick="goHome()">
+            <i class="bx bxl-google"></i> Continue with Google
+          </button>
 
-        <div class="divider-row">
-          <span></span><p>atau</p><span></span>
-        </div>
+          <button class="btn-social fb" onclick="goHome()">
+            <i class="bx bxl-facebook"></i> Continue with Facebook
+          </button>
 
-        <form onsubmit="event.preventDefault(); goHome();">
-
-          <label class="field-label">Email</label>
-          <div class="input-wrapper">
-            <input type="email" required placeholder="Enter your email" />
+          <div class="divider-row">
+            <span></span><p>atau</p><span></span>
           </div>
 
-          <label class="field-label">Password</label>
-          <div class="input-wrapper">
-            <input type="password" required placeholder="Enter your password" />
-          </div>
+          <form onsubmit="event.preventDefault(); goHome();">
 
-          <div class="small-row">
-            <label class="checkbox">
-              <input type="checkbox" onclick="togglePassword()" /> Show password
-            </label>
-            <span class="small-link" onclick="resetPassword()">Forgot password</span>
-          </div>
+            <label class="field-label">Email</label>
+            <div class="input-wrapper">
+              <input type="email" required placeholder="Enter your email" />
+            </div>
 
-          <button class="primary-btn" type="submit">Login</button>
-        </form>
+            <label class="field-label">Password</label>
+            <div class="input-wrapper">
+              <input type="password" required placeholder="Enter your password" />
+            </div>
 
-        <p class="link-row small">
-          Belum punya akun?
-          <a href="#" onclick="goRegister(); return false;">Daftar di sini</a>
-        </p>
+            <div class="small-row">
+              <label class="checkbox">
+                <input type="checkbox" onclick="togglePassword()" /> Show password
+              </label>
+              <span class="small-link" onclick="resetPassword()">Forgot password</span>
+            </div>
 
-      </section>
-    </main>
+            <button class="primary-btn" type="submit">Login</button>
+          </form>
 
-    <!-- Toast -->
+          <p class="link-row small">
+            Belum punya akun?
+            <a href="#" onclick="goRegister(); return false;">Daftar di sini</a>
+          </p>
 
+        </section>
+      </main>
+
+    </div>
   </div>
-    <div id="toast" class="toast">Link reset password sudah dikirim ke email</div>
 
+  <!-- Toast di luar screen → always centered viewport -->
+  <div id="toast" class="toast">Link reset password sudah dikirim ke email</div>
 
   <script>
-    /* Smooth dissolve gentle */
     function smoothGo(url) {
       const screen = document.querySelector(".screen");
       screen.classList.add("fade-out");
@@ -353,7 +317,7 @@
     function resetPassword() {
       const toast = document.getElementById("toast");
       toast.classList.add("show");
-      setTimeout(() => { toast.classList.remove("show"); }, 2200);
+      setTimeout(() => toast.classList.remove("show"), 2200);
     }
   </script>
 
