@@ -310,7 +310,7 @@
     function goRegister() { smoothGo("register.html"); }
 
     function togglePassword() {
-      const pw = document.querySelector('input[type="password"]');
+      const pw = document.getElementById("loginPw");
       pw.type = pw.type === "password" ? "text" : "password";
     }
 
