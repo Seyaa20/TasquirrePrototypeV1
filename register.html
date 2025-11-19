@@ -14,8 +14,9 @@
       --text-sub: #a96b3d;
       --accent: #c5652c;
       --panel-grad: linear-gradient(180deg, #FFE7CB, #F0B580);
-      --bubble: rgba(90, 44, 19, 0.18);      /* brown bubble */
-      --bubble-hover: rgba(90, 44, 19, 0.28);
+
+      --toast-success: rgba(197, 101, 44, 0.93);
+      --toast-error: rgba(197, 101, 44, 0.93);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -50,42 +51,24 @@
       filter: blur(12px);
     }
 
-
-/* ============================
-   FIXED BACK BUTTON (NEW)
-   ============================ */
-/* ============================
-   PERFECT BACK BUTTON (FINAL)
-   ============================ */
-.icon-back {
-  position: absolute;
-
-  top: 90px;     /* sesuai permintaan kamu */
-  left: 22px;
-
-  width: 46px;
-  height: 46px;
-
-  border-radius: 50%;
-  border: none;
-
-  /* bulatan cokelat */
-  background: #b5522b;   /* cokelat warm Tasquirre */
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  /* ICON PUTIH */
-  color: #ffffff;
-  font-size: 1.9rem;
-
-  cursor: pointer;
-  transition: 0.25s ease;
-}
-
-
-
+    /* BACK BUTTON */
+    .icon-back {
+      position: absolute;
+      top: 90px;
+      left: 22px;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: none;
+      background: #b5522b;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #ffffff;
+      font-size: 1.9rem;
+      cursor: pointer;
+      z-index: 10;
+    }
 
     /* HEADER */
     .welcome-block {
@@ -97,7 +80,7 @@
     }
 
     .w-top { font-size: 2.6rem; font-weight: 700; color: var(--text-main); }
-    .w-mid { font-size: 1.1rem; margin-top: -2px; margin-bottom: -2px; color: var(--text-sub); }
+    .w-mid { font-size: 1.1rem; color: var(--text-sub); margin-top: -2px; margin-bottom: -2px; }
     .w-bottom { font-size: 2.6rem; font-weight: 700; color: var(--accent); }
 
     .subtitle-line {
@@ -114,22 +97,16 @@
       margin: 0.8rem auto 1.2rem;
     }
 
-
     /* PANEL */
-.auth-panel {
-  margin-top: 1.5rem;
-
-  /* gradient yang sama */
-  background: linear-gradient(180deg, #FFE7CB, #F0B580);
-
-  padding: 1.8rem 1.4rem 1.4rem;
-  border-radius: 28px;
-  box-shadow: 0 18px 36px rgba(197, 101, 44, 0.25);
-
-  /* MATCH LOGIN: jarak kiri & kanan */
-  margin-left: 0.4rem;
-  margin-right: 0.4rem;
-}
+    .auth-panel {
+      margin-top: 1.5rem;
+      background: var(--panel-grad);
+      padding: 1.8rem 1.4rem 1.4rem;
+      border-radius: 28px;
+      box-shadow: 0 18px 36px rgba(197, 101, 44, 0.25);
+      margin-left: 0.4rem;
+      margin-right: 0.4rem;
+    }
 
     .section-title {
       text-align: center;
@@ -139,10 +116,6 @@
       margin-bottom: 1.3rem;
     }
 
-
-    /* =====================================
-       FIXED INPUT LABEL (MATCHES LOGIN.HTML)
-       ===================================== */
     .field-label {
       font-size: 0.97rem;
       color: var(--text-main);
@@ -151,42 +124,25 @@
       display: block;
     }
 
-
-    /* =====================================
-       FIXED INPUT STYLE (MATCH LOGIN.HTML)
-       ===================================== */
-    .input-wrapper {
-      margin-bottom: 1rem;
-    }
-
     .input-wrapper input {
       width: 100%;
       padding: 0.95rem;
-
-      border: none !important;
-      outline: none !important;
-
       background: #fff;
       border-radius: 14px;
-
       font-size: 1rem;
-      color: var(--text-main);        /* DARK TEXT LIKE LOGIN */
-
+      color: var(--text-main);
+      border: none;
+      outline: none;
       box-shadow: 0 3px 10px rgba(0,0,0,0.07);
-      transition: transform 0.15s ease, box-shadow 0.2s ease;
-    }
-
-    .input-wrapper input::placeholder {
-      color: rgba(90, 44, 19, 0.45);   /* same soft brown placeholder as login */
+      transition: 0.2s ease;
+      margin-bottom: 1rem;
     }
 
     .input-wrapper input:focus {
-      box-shadow: 0 5px 14px rgba(197,101,44,0.25);
+      box-shadow: 0 6px 18px rgba(197,101,44,0.22);
       transform: translateY(-1px);
     }
 
-
-    /* CHECKBOX */
     .checkbox {
       display: flex;
       align-items: center;
@@ -196,8 +152,6 @@
       margin-bottom: 1.2rem;
     }
 
-
-    /* BUTTON */
     .primary-btn {
       width: 100%;
       padding: 0.95rem;
@@ -207,8 +161,8 @@
       border-radius: 999px;
       border: none;
       font-weight: 600;
-      box-shadow: 0 8px 18px rgba(197, 101, 44, 0.4);
       cursor: pointer;
+      box-shadow: 0 8px 18px rgba(197, 101, 44, 0.4);
       margin-top: 0.4rem;
     }
 
@@ -225,57 +179,42 @@
       text-decoration: none;
     }
 
-
-    /* POPUP */
+    /* TOAST */
     .toast {
-      position: absolute;
+      position: fixed;
       top: 50%;
       left: 50%;
-      width: 85%;
-      height: 25%;
-
-      transform: translate(-50%, -50%) scale(0.9);
-      background: rgba(197, 101, 44, 0.93);
-
+      width: 80%;
+      max-width: 330px;
+      transform: translate(-50%, -50%) scale(0.85);
+      padding: 22px 20px;
+      border-radius: 20px;
       color: #fff;
-      border-radius: 24px;
-      padding: 28px;
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 600;
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
       text-align: center;
 
       opacity: 0;
       pointer-events: none;
-      transition: all 0.45s ease;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-
+      transition: 0.4s ease;
       z-index: 999;
     }
 
     .toast.show {
       opacity: 1;
       transform: translate(-50%, -50%) scale(1);
-      pointer-events: auto;
     }
 </style>
-
-
 </head>
 
 <body>
 
   <div class="phone-frame">
 
-    <!-- Back Button -->
     <button class="icon-back" onclick="goLogin()">
       <i class="bx bx-chevron-left"></i>
     </button>
 
-    <!-- Header -->
     <h1 class="welcome-block">
       <span class="w-top">Welcome</span>
       <span class="w-mid">to</span>
@@ -285,16 +224,14 @@
     <p class="subtitle-line">“Open for All, Done by All”</p>
     <img src="tupai.png.png" class="header-logo" />
 
-    <!-- Register Panel -->
     <section class="auth-panel">
-
       <h2 class="section-title">Register</h2>
 
-      <form onsubmit="event.preventDefault(); showRegistered();">
+      <form onsubmit="event.preventDefault(); validateRegister();">
 
         <label class="field-label">Email</label>
         <div class="input-wrapper">
-          <input type="email" required placeholder="Enter your email" />
+          <input type="email" id="email" required placeholder="Enter your email" />
         </div>
 
         <label class="field-label">Password</label>
@@ -318,55 +255,70 @@
         Sudah punya akun?
         <a href="#" onclick="goLogin(); return false;">Login di sini</a>
       </p>
-
     </section>
-
-    <!-- Toast -->
-    <div id="toast" class="toast">
-      Akun berhasil dibuat! 🎊✨<br><br>Silakan login untuk melanjutkan.
-    </div>
 
   </div>
 
-  <script>
-    function smoothGo(url) {
-      const frame = document.querySelector(".phone-frame");
-      frame.classList.add("fade-out");
-      setTimeout(() => window.location.href = url, 450);
-    }
+  <!-- UNIVERSAL TOAST -->
+  <div id="toast" class="toast"></div>
 
-    function goLogin() { smoothGo("login.html"); }
-
-    function togglePasswords() {
-      const pw1 = document.getElementById("pw1");
-      const pw2 = document.getElementById("pw2");
-      const type = pw1.type === "password" ? "text" : "password";
-      pw1.type = type;
-      pw2.type = type;
-    }
-
-    function showRegistered() {
-      const toast = document.getElementById("toast");
-      toast.classList.add("show");
-
-      setTimeout(() => {
-        toast.classList.remove("show");
-        smoothGo("login.html");
-      }, 2300);
-    }
-
-  if (document.referrer === "" || !document.referrer.includes("login.html")) {
-    window.location.href = "login.html";
+<script>
+  function smoothGo(url) {
+    const frame = document.querySelector(".phone-frame");
+    frame.classList.add("fade-out");
+    setTimeout(() => window.location.href = url, 450);
   }
 
-  // 2. Paksa back button kembali ke login
-  history.pushState(null, null, location.href);
+  function goLogin() { smoothGo("login.html"); }
 
-  window.addEventListener("popstate", function () {
+  function togglePasswords() {
+    const pw1 = document.getElementById("pw1");
+    const pw2 = document.getElementById("pw2");
+    const type = pw1.type === "password" ? "text" : "password";
+    pw1.type = type;
+    pw2.type = type;
+  }
+
+  /* ================================
+     PASSWORD VALIDATION
+  ================================= */
+  function validateRegister() {
+    const pw1 = document.getElementById("pw1").value;
+    const pw2 = document.getElementById("pw2").value;
+    const toast = document.getElementById("toast");
+
+    // ERROR: password beda → muncul toast merah
+    if (pw1 !== pw2) {
+      toast.innerHTML = "Passwords do not match  (X)";
+      toast.style.background = "var(--toast-error)";
+      toast.classList.add("show");
+
+      setTimeout(() => toast.classList.remove("show"), 2000);
+      return; // stop register
+    }
+
+    // SUCCESS → toast cokelat
+    toast.innerHTML = "Account created successfully 🎉✨";
+    toast.style.background = "var(--toast-success)";
+    toast.classList.add("show");
+
+    setTimeout(() => {
+      toast.classList.remove("show");
+      smoothGo("login.html");
+    }, 2200);
+  }
+
+  /* BLOCK direct access */
+  if (document.referrer === "" || !document.referrer.includes("login.html")) {
+    // window.location.href = "login.html";
+  }
+
+  history.pushState(null, null, location.href);
+  window.addEventListener("popstate", () => {
     window.location.href = "login.html";
   });
 
-  </script>
+</script>
 
 </body>
 </html>
