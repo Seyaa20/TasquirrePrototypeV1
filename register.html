@@ -354,6 +354,15 @@
         smoothGo("login.html");
       }, 2300);
     }
+
+  // Ketika halaman register dibuka, dorong 1 state ke history
+  history.pushState(null, null, location.href);
+
+  window.addEventListener("popstate", function () {
+    // Kalau user pencet tombol back HP → arahkan ke login.html
+    window.location.href = "login.html";
+  });
+
   </script>
 
 </body>
