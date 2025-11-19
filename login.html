@@ -158,6 +158,7 @@
       font-size: 0.85rem;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 1rem;
     }
 
@@ -272,7 +273,8 @@
 
             <label class="field-label">Password</label>
             <div class="input-wrapper">
-              <input type="password" required placeholder="Enter your password" />
+              <!-- 🔥 kasih id khusus -->
+              <input id="loginPw" type="password" required placeholder="Enter your password" />
             </div>
 
             <div class="small-row">
@@ -311,6 +313,7 @@
 
     function togglePassword() {
       const pw = document.getElementById("loginPw");
+      if (!pw) return;
       pw.type = pw.type === "password" ? "text" : "password";
     }
 
