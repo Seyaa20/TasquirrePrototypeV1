@@ -303,8 +303,16 @@
   bottom: 0;
   left: 0;
   right: 0;
+
+  /* padding atas & samping */
   padding: 0.45rem 0.8rem;
-  padding-bottom: calc(20px + env(safe-area-inset-bottom));
+
+  /* 🚀 proteksi 1: naikkan input bar dari tombol HP */
+  padding-bottom: 80px;
+
+  /* 🚀 proteksi 2: tambahkan safe area kalau HP support */
+  padding-bottom: calc(80px + env(safe-area-inset-bottom));
+
   background: var(--bg);
   border-top: 1px solid var(--border-soft);
   display: flex;
@@ -740,3 +748,4 @@
 
 </body>
 </html>
+
