@@ -680,6 +680,52 @@
   font-weight: bold;
 }
 
+
+    /*  perbaikan */
+
+    /* FIX HEADER GAP */
+body {
+  background: var(--bg);
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.app-header {
+  padding: 0.4rem 1.1rem;
+}
+
+/* FIX HERO IMAGE RESPONSIVE */
+.hero-illustration img {
+  width: 140px;
+  height: auto;
+}
+
+/* FIX SERVICE CATEGORY GRID DI HP */
+@media (max-width: 420px) {
+  .category-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .category-card img {
+    height: 90px;
+  }
+}
+
+/* FIX BUTTON "SWITCH TO PARTNER" */
+.pill-btn.secondary {
+  white-space: nowrap;
+}
+
+/* FIX SALDO TEXT NOT CENTER */
+.wallet-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem 1.1rem;
+}
+
+
+    
   </style>
 </head>
 
