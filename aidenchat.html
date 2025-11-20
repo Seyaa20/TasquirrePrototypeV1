@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tasquirre – Chat with Aiden</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #fff6e6;
+      --bg-soft: #ffe8c7;
+      --accent: #c5652c;
+      --accent-soft: #ffe1c2;
+      --text-main: #5a2c13;
+      --text-sub: #a96b3d;
+      --round-soft: #f1d2b2;
+      --border-soft: #f0d4af;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      font-family: "Poppins", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .screen {
+      width: 100%;
+      max-width: 428px;
+      height: 100vh;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* HEADER FIXED */
+    .chat-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 0.6rem 1rem;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      gap: 0.9rem; /* jarak back & foto */
+      border-bottom: 1px solid var(--border-soft);
+      z-index: 10;
+    }
+
+    .back-btn {
+      font-size: 1.9rem;
+      color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .header-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .header-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .header-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-info .name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.1;
+    }
+
+    .header-info .status {
+      font-size: 0.8rem;
+      color: var(--accent);
+    }
+
+    /* CHAT THREAD (WALLPAPER) */
+    .chat-thread {
+      position: absolute;
+      top: 64px;   /* tinggi header */
+      bottom: 80px; /* tinggi input bar */
+      left: 0;
+      right: 0;
+      overflow-y: auto;
+      padding: 0.7rem 0.9rem 1.1rem;
+      background: url("chat-wallpaper.png");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    .chat-thread::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(255,246,230,0.96), rgba(255,246,230,0.92));
+      pointer-events: none;
+    }
+
+    .chat-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .date-divider {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      margin: 0.5rem 0 0.8rem;
+      opacity: 0.8;
+    }
+
+    .message-row {
+      display: flex;
+      margin-bottom: 0.4rem;
+    }
+
+    .message-row.aiden { justify-content: flex-start; }
+    .message-row.me { justify-content: flex-end; }
+
+    .bubble {
+      max-width: 78%;
+      padding: 0.55rem 0.8rem 0.4rem;
+      border-radius: 18px;
+      font-size: 0.86rem;
+      line-height: 1.35;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.10);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Gradient Tasquirre style */
+    .bubble.me {
+      background: linear-gradient(135deg, #c5652c, #b5522b, #824119);
+      color: #fff;
+      border-bottom-right-radius: 6px;
+    }
+
+    .bubble.aiden {
+      background: linear-gradient(135deg, #fffaf2, #ffe1c2);
+      color: var(--text-main);
+      border-bottom-left-radius: 6px;
+      border: 1px solid rgba(240, 187, 138, 0.7);
+    }
+
+    .msg-text {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .msg-meta {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      font-size: 0.7rem;
+      margin-top: 4px;
+      opacity: 0.85;
+    }
+
+    .msg-meta .time {
+      opacity: 0.9;
+    }
+
+    .check {
+      font-size: 1rem;
+    }
+
+    .check.sent  { color: #a87c5f; }  /* 1 centang */
+    .check.deliv { color: #a87c5f; }  /* 2 abu */
+    .check.read  { color: #377BF0; }  /* 2 biru */
+
+    /* LINK PREVIEW */
+    .link-preview {
+      margin-top: 0.3rem;
+      padding: 0.4rem 0.55rem;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.35);
+      font-size: 0.78rem;
+    }
+
+    .link-preview a {
+      color: #377BF0;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .link-preview-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    /* IMAGE MESSAGE */
+    .msg-image {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-top: 4px;
+      display: block;
+    }
+
+    /* VOICE NOTE BUBBLE */
+    .voice-note {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 2px;
+    }
+
+    .voice-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .voice-bar {
+      flex: 1;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.45);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .voice-bar::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 40%;
+      background: #fff;
+      opacity: 0.9;
+    }
+
+    .voice-duration {
+      font-size: 0.8rem;
+      opacity: 0.9;
+    }
+
+    /* TYPING INDICATOR */
+    .typing-row {
+      display: none;
+      justify-content: flex-start;
+      margin-top: 0.2rem;
+    }
+
+    .typing-bubble {
+      background: linear-gradient(135deg, #fffaf2, #ffe1c2);
+      border-radius: 18px;
+      padding: 0.4rem 0.7rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.10);
+    }
+
+    .typing-dots span {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #c5652c;
+      margin-right: 4px;
+      animation: blink 1.2s infinite;
+    }
+
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes blink {
+      0%   { opacity: 0.2; transform: translateY(0); }
+      50%  { opacity: 1;   transform: translateY(-2px); }
+      100% { opacity: 0.2; transform: translateY(0); }
+    }
+
+    /* INPUT BAR FIXED */
+    .input-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0.45rem 0.8rem 0.65rem;
+      background: var(--bg);
+      border-top: 1px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      z-index: 10;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: none;
+      background: var(--round-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: var(--accent);
+      cursor: pointer;
+    }
+
+    .input-field-wrap {
+      flex: 1;
+      background: #fff;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      padding: 0.35rem 0.9rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-field {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-size: 0.86rem;
+      background: transparent;
+      font-family: inherit;
+    }
+
+    .send-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, #d07234, #c0521d);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(197,101,44,0.35);
+    }
+
+    /* EMOJI PICKER */
+    .emoji-picker {
+      position: absolute;
+      bottom: 80px;
+      left: 10px;
+      width: 260px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+      padding: 0.5rem;
+      display: none;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      z-index: 15;
+    }
+
+    .emoji-btn {
+      border: none;
+      background: transparent;
+      font-size: 1.4rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0.15rem;
+    }
+
+    /* SCROLLBAR kecil */
+    .chat-thread::-webkit-scrollbar {
+      width: 4px;
+    }
+    .chat-thread::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .chat-thread::-webkit-scrollbar-thumb {
+      background: rgba(0,0,0,0.15);
+      border-radius: 999px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="screen" id="screen">
+
+  <!-- HEADER -->
+  <div class="chat-header">
+    <i class="bx bx-chevron-left back-btn" onclick="goBack()"></i>
+
+    <div class="header-avatar">
+      <img src="aiden.jpg" alt="Aiden">
+    </div>
+
+    <div class="header-info">
+      <span class="name">Aiden Sebastian Lawrence</span>
+      <span class="status" id="statusText">online</span>
+    </div>
+  </div>
+
+  <!-- CHAT THREAD -->
+  <div class="chat-thread" id="chatThread">
+    <div class="chat-inner" id="chatInner">
+
+      <div class="date-divider" id="dateDivider">Today</div>
+
+      <!-- Contoh chat awal -->
+      <div class="message-row aiden">
+        <div class="bubble aiden">
+          <div class="msg-text">Haii, kamu sudah sempat cek file brief-nya?</div>
+          <div class="msg-meta"><span class="time">09.10</span></div>
+        </div>
+      </div>
+
+      <div class="message-row me">
+        <div class="bubble me">
+          <div class="msg-text">Belum semua, tapi aku udah lihat bagian awalnya kok 😅</div>
+          <div class="msg-meta">
+            <span class="time">09.12</span>
+            <i class="bx bx-check check read"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="message-row aiden">
+        <div class="bubble aiden">
+          <div class="msg-text">Oke sip, kalau ada yang bingung bilang ya 🙌</div>
+          <div class="msg-meta"><span class="time">09.13</span></div>
+        </div>
+      </div>
+
+      <div class="message-row aiden">
+        <div class="bubble aiden">
+          <div class="msg-text">Kamu bisa kirim filenya?</div>
+          <div class="msg-meta"><span class="time">09.14</span></div>
+        </div>
+      </div>
+
+      <!-- Typing indicator -->
+      <div class="message-row aiden typing-row" id="typingRow">
+        <div class="typing-bubble">
+          <div class="typing-dots">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EMOJI PICKER -->
+  <div class="emoji-picker" id="emojiPicker">
+    <button class="emoji-btn">😀</button>
+    <button class="emoji-btn">😅</button>
+    <button class="emoji-btn">😂</button>
+    <button class="emoji-btn">😊</button>
+    <button class="emoji-btn">😍</button>
+    <button class="emoji-btn">🤔</button>
+    <button class="emoji-btn">🙌</button>
+    <button class="emoji-btn">🙏</button>
+    <button class="emoji-btn">❤️</button>
+    <button class="emoji-btn">👍</button>
+    <button class="emoji-btn">🔥</button>
+    <button class="emoji-btn">🎧</button>
+  </div>
+
+  <!-- INPUT BAR -->
+  <div class="input-bar">
+    <button class="icon-btn" id="emojiToggle"><i class="bx bx-smile"></i></button>
+    <button class="icon-btn" id="imageBtn"><i class="bx bx-image-alt"></i></button>
+
+    <div class="input-field-wrap">
+      <input type="text" id="msgInput" class="input-field" placeholder="Message Aiden..." />
+    </div>
+
+    <button class="icon-btn" id="voiceBtn"><i class="bx bx-microphone"></i></button>
+
+    <button class="send-btn" id="sendBtn"><i class="bx bx-send"></i></button>
+  </div>
+
+  <!-- Hidden file input for image -->
+  <input type="file" id="imageInput" accept="image/*" style="display:none" />
+
+</div>
+
+<script>
+  const chatInner   = document.getElementById("chatInner");
+  const typingRow   = document.getElementById("typingRow");
+  const statusText  = document.getElementById("statusText");
+  const msgInput    = document.getElementById("msgInput");
+  const sendBtn     = document.getElementById("sendBtn");
+  const emojiPicker = document.getElementById("emojiPicker");
+  const emojiToggle = document.getElementById("emojiToggle");
+  const imageBtn    = document.getElementById("imageBtn");
+  const imageInput  = document.getElementById("imageInput");
+  const voiceBtn    = document.getElementById("voiceBtn");
+  const chatThread  = document.getElementById("chatThread");
+
+  function goBack() {
+    window.location.href = "chat.html";
+  }
+
+  function scrollToBottom() {
+    chatThread.scrollTop = chatThread.scrollHeight;
+  }
+
+  function getTimeString() {
+    const n = new Date();
+    const h = n.getHours().toString().padStart(2, "0");
+    const m = n.getMinutes().toString().padStart(2, "0");
+    return `${h}.${m}`;
+  }
+
+  /* === CREATE MESSAGE ROWS === */
+
+  function createMyTextMessage(text) {
+    const row = document.createElement("div");
+    row.className = "message-row me";
+
+    const time = getTimeString();
+
+    // detect link
+    const urlMatch = text.match(/https?:\/\/\S+/);
+    let linkHTML = "";
+    if (urlMatch) {
+      const url = urlMatch[0];
+      linkHTML = `
+        <div class="link-preview">
+          <div class="link-preview-title">Link preview</div>
+          <a href="${url}" target="_blank">${url}</a>
+        </div>
+      `;
+    }
+
+    row.innerHTML = `
+      <div class="bubble me">
+        <div class="msg-text">${text}</div>
+        ${linkHTML}
+        <div class="msg-meta">
+          <span class="time">${time}</span>
+          <i class="bx bx-check check sent"></i>
+        </div>
+      </div>
+    `;
+
+    chatInner.insertBefore(row, typingRow);
+    scrollToBottom();
+  }
+
+  function createMyVoiceNote() {
+    const row = document.createElement("div");
+    row.className = "message-row me";
+    const time = getTimeString();
+
+    row.innerHTML = `
+      <div class="bubble me">
+        <div class="voice-note">
+          <div class="voice-icon"><i class="bx bx-microphone"></i></div>
+          <div class="voice-bar"></div>
+          <div class="voice-duration">0:07</div>
+        </div>
+        <div class="msg-meta">
+          <span class="time">${time}</span>
+          <i class="bx bx-check check sent"></i>
+        </div>
+      </div>
+    `;
+
+    chatInner.insertBefore(row, typingRow);
+    scrollToBottom();
+  }
+
+  function createMyImageMessage(src) {
+    const row = document.createElement("div");
+    row.className = "message-row me";
+    const time = getTimeString();
+
+    row.innerHTML = `
+      <div class="bubble me">
+        <img src="${src}" class="msg-image" alt="Image" />
+        <div class="msg-meta">
+          <span class="time">${time}</span>
+          <i class="bx bx-check check sent"></i>
+        </div>
+      </div>
+    `;
+
+    chatInner.insertBefore(row, typingRow);
+    scrollToBottom();
+  }
+
+  function createAidenMessage(text) {
+    const row = document.createElement("div");
+    row.className = "message-row aiden";
+    const time = getTimeString();
+
+    row.innerHTML = `
+      <div class="bubble aiden">
+        <div class="msg-text">${text}</div>
+        <div class="msg-meta">
+          <span class="time">${time}</span>
+        </div>
+      </div>
+    `;
+
+    chatInner.insertBefore(row, typingRow);
+    scrollToBottom();
+  }
+
+  /* === TYPING & CHECK LOGIC === */
+
+  function showTyping() {
+    typingRow.style.display = "flex";
+    statusText.textContent  = "typing…";
+  }
+
+  function hideTyping() {
+    typingRow.style.display = "none";
+    statusText.textContent  = "online";
+  }
+
+  function updateChecks() {
+    const checks = document.querySelectorAll(".bubble.me .check");
+    checks.forEach(c => {
+      // sent -> deliv
+      c.classList.remove("sent");
+      c.classList.add("deliv");
+      c.classList.remove("bx-check");
+      c.classList.add("bx-check-double");
+
+      // deliv -> read
+      setTimeout(() => {
+        c.classList.remove("deliv");
+        c.classList.add("read");
+      }, 600);
+    });
+  }
+
+  function autoReply() {
+    const replies = [
+      "Okee, makasih banyak yaa! 🙏",
+      "Siap, nanti aku review dulu ya.",
+      "Nice, ini ngebantu banget 😆",
+      "Kalau sudah final kabarin aku ya.",
+      "Sip, aku percaya kamu kok. 😌"
+    ];
+    const text = replies[Math.floor(Math.random() * replies.length)];
+
+    createAidenMessage(text);
+    hideTyping();
+    updateChecks();
+  }
+
+  /* === SEND HANDLERS === */
+
+  function handleSendText() {
+    const text = msgInput.value.trim();
+    if (!text) return;
+
+    createMyTextMessage(text);
+    msgInput.value = "";
+
+    showTyping();
+    setTimeout(autoReply, 1300);
+  }
+
+  sendBtn.addEventListener("click", handleSendText);
+
+  msgInput.addEventListener("keydown", e => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendText();
+    }
+  });
+
+  /* Emoji picker */
+  emojiToggle.addEventListener("click", () => {
+    const isShown = emojiPicker.style.display === "flex";
+    emojiPicker.style.display = isShown ? "none" : "flex";
+  });
+
+  emojiPicker.addEventListener("click", e => {
+    if (e.target.classList.contains("emoji-btn")) {
+      msgInput.value += e.target.textContent;
+      msgInput.focus();
+    }
+  });
+
+  /* Image sending */
+  imageBtn.addEventListener("click", () => {
+    imageInput.click();
+  });
+
+  imageInput.addEventListener("change", e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      createMyImageMessage(ev.target.result);
+      showTyping();
+      setTimeout(autoReply, 1400);
+    };
+    reader.readAsDataURL(file);
+    imageInput.value = "";
+  });
+
+  /* Voice note dummy */
+  voiceBtn.addEventListener("click", () => {
+    createMyVoiceNote();
+    showTyping();
+    setTimeout(autoReply, 1500);
+  });
+
+  // initial scroll
+  scrollToBottom();
+</script>
+
+</body>
+</html>
