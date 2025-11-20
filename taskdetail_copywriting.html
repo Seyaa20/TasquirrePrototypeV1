@@ -633,9 +633,10 @@
         <span>Ajukan revisi</span>
       </button>
 
-      <button class="btn-ghost" onclick="showToast('Konfirmasi selesai akan tersedia di versi berikutnya')">
-        Tandai sebagai selesai
-      </button>
+<button class="btn-ghost" onclick="markTaskAsCompleted()">
+  Tandai sebagai selesai
+</button>
+
     </section>
 
   </main>
@@ -672,6 +673,24 @@
     window.location.href = "aidenchat.html";
   }, 450);
 }
+
+/* MARK TASK AS COMPLETED */
+function markTaskAsCompleted(){
+  // Simpan status selesai di localStorage
+  localStorage.setItem("taskCopywritingStatus", "completed");
+
+  // Munculkan toast
+  showToast("Task berhasil ditandai selesai");
+
+  // Setelah animasi, kembali ke Activities
+  const sc = document.getElementById("screen");
+  sc.classList.add("fade-out");
+
+  setTimeout(() => {
+    window.location.href = "activities.html?tab=completed";
+  }, 450);
+}
+
 
 </script>
 
