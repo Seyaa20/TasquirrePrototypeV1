@@ -96,7 +96,7 @@
     .chat-thread {
       position: absolute;
       top: 64px;   /* tinggi header */
-      bottom: 80px; /* tinggi input bar */
+      bottom: calc(90px + env(safe-area-inset-bottom)); /* tinggi input bar */
       left: 0;
       right: 0;
       overflow-y: auto;
@@ -298,19 +298,23 @@
     }
 
     /* INPUT BAR FIXED */
-    .input-bar {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 0.45rem 0.8rem 0.65rem;
-      background: var(--bg);
-      border-top: 1px solid var(--border-soft);
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      z-index: 10;
-    }
+.input-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.45rem 0.8rem calc(0.65rem + env(safe-area-inset-bottom));
+  background: var(--bg);
+  border-top: 1px solid var(--border-soft);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  z-index: 10;
+
+  /* Tambahan agar tidak mepet HP nav bar */
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+}
+
 
     .icon-btn {
       width: 38px;
