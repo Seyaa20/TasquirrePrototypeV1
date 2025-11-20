@@ -7,7 +7,7 @@
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
 
   <style>
-    :root {
+ :root {
       --bg: #fff6e6;
       --bg-soft: #ffe8c7;
       --bg-card: #f6c08b;
@@ -15,6 +15,9 @@
       --text-main: #5a2c13;
       --text-sub: #a96b3d;
       --accent: #c5652c;
+        --task1: #C5652C;
+  --task2: #B5522B;
+  --task3: #824119;
       --accent-soft: #ffe1c2;
       --round-soft: #f1d2b2;
       --border-soft: #f0d4af;
@@ -143,6 +146,13 @@
       z-index: 200;
     }
 
+    /* Fix search bar spacing */
+.search-section {
+  margin-bottom: 1rem;  
+  margin-top: 0.5rem;
+}
+
+
     .search-item {
       padding: 0.9rem 1.2rem;
       display: flex;
@@ -179,21 +189,22 @@
     }
 
     /* TASK CARD (EXACT from home.html) */
-    .task-card {
-      background: linear-gradient(
-        to bottom,
-        var(--task1) 0%,
-        var(--task2) 55%,
-        var(--task3) 100%
-      );
-      border-radius: 24px;
-      padding: 1.3rem;
-      margin-bottom: 1.3rem;
-      color: #fff;
-      box-shadow: 0 14px 28px rgba(130, 65, 25, 0.35);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-      cursor: pointer;
-    }
+.task-card {
+  background: linear-gradient(
+    to bottom,
+    var(--task1) 0%,
+    var(--task2) 55%,
+    var(--task3) 100%
+  );
+  border-radius: 24px;
+  padding: 1.3rem;
+  margin-bottom: 1.3rem;
+  color: #fff;
+  box-shadow: 0 14px 28px rgba(130, 65, 25, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
 
     .task-card:hover {
       transform: translateY(-3px);
@@ -327,12 +338,15 @@
   <main class="app-main">
 
     <!-- SEARCH -->
-    <div class="search-row">
-      <div class="search-input">
-        <i class="bx bx-search"></i>
-        <input type="text" placeholder="Cari aktivitas" id="searchActivityInput" />
-      </div>
+<div class="search-section">
+  <div class="search-row">
+    <div class="search-input">
+      <i class="bx bx-search"></i>
+      <input type="text" placeholder="Cari aktivitas" id="searchActivityInput" />
     </div>
+  </div>
+</div>
+
 
     <!-- TABS -->
     <div class="activity-tabs">
