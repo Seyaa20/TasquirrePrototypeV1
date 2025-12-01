@@ -21,7 +21,6 @@ body {
   background: var(--bg);
   display: flex;
   justify-content: center;
-  padding: 1.5rem 0;
   font-family: "Poppins", sans-serif;
 }
 
@@ -252,9 +251,15 @@ window.onload = () => {
 
 /* Partner Data */
 let partners = [
-  { name: "Adit", rating: 4.9, price: 15000, desc: "Ahli copywriting iklan dan caption", img: "digitaltask.jpeg" },
-  { name: "Farrel", rating: 4.7, price: 18000, desc: "Spesialis artikel & storytelling", img: "digitaltask.jpeg" }
+  { name: "Nova Ardelia", rating: 4.79, price: 15500, desc: "Pakar caption IG/TikTok tone fun, clean, dan friendly", img: "Nova.png" },
+  { name: "Lynette Aramore", rating: 4.88, price: 17000, desc: "Ekspert copywriting feminim, poetic, dan branded", img: "lynette.png" },
+  { name: "Keira Novaline", rating: 4.74, price: 14000, desc: "Aesthetic copywriter untuk konten lifestyle & beauty", img: "keira.png" },
+  { name: "Riven D'Auric", rating: 4.91, price: 19000, desc: "Hard-selling copywriting untuk bisnis & e-commerce", img: "riven.png" },
+  { name: "Ezren Vale", rating: 4.85, price: 16500, desc: "Copywriter modern untuk startup & tech branding", img: "ezren.png" },
+  { name: "Seraphine Lyre", rating: 4.93, price: 17500, desc: "Storytelling emotional & warm untuk brand personal", img: "seraphine.png" },
+  { name: "Kairos Nolan", rating: 4.82, price: 15000, desc: "Copywriter untuk konten minimalis & impactful", img: "kairos.png" },
 ];
+
 
 partners.sort((a,b) => b.rating - a.rating);
 
@@ -347,4 +352,3 @@ function goBack() {
 
 </body>
 </html>
-
