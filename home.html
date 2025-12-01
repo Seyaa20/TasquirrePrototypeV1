@@ -303,7 +303,7 @@
     }
 
     .section-title {
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: var(--text-main);
       margin-bottom: 0.4rem;
       font-weight: 600;
@@ -636,14 +636,17 @@
       gap: 0.15rem;
     }
 
+    .nav-item i { font-size: 1.35rem; }
+    .nav-item.active { color: var(--accent); font-weight: 600; }
+
+
     .main-search {
   position: relative;
   z-index: 100;
 }
 
 
-    .nav-item i { font-size: 1.35rem; }
-    .nav-item.active { color: var(--accent); font-weight: 600; }
+  
 
     /* TOAST MESSAGE */
 /* TOAST MESSAGE — muncul di atas */
@@ -956,7 +959,7 @@ if (hasUnread) {
   // Saat halaman home dibuka, ambil saldo dari localStorage
 let saldo = localStorage.getItem("saldoTasquirre");
 if (!saldo) {
-  saldo = 187341; // default saldo awal
+  saldo = 0; // default saldo awal
   localStorage.setItem("saldoTasquirre", saldo);
 }
 
@@ -967,6 +970,44 @@ document.getElementById("walletAmount").innerText =
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   });
+
+
+/* === POINT SYSTEM FIX === */
+
+let poin = localStorage.getItem("poinTasquirre");
+
+/* Jika pertama kali aplikasi dibuka dan belum pernah ada poin */
+if (poin === null) {
+  poin = 0;
+  localStorage.setItem("poinTasquirre", poin);
+}
+
+/* Tampilkan ke UI */
+document.querySelector(".wallet-points").innerText =
+  `${Number(poin).toLocaleString("id-ID")} poin`;
+
+/* Helper functions untuk menambah/mengurangi poin */
+function addPoin(amount) {
+  let p = Number(localStorage.getItem("poinTasquirre") || 0);
+  p += Number(amount);
+  localStorage.setItem("poinTasquirre", p);
+  updatePoinUI();
+}
+
+function reducePoin(amount) {
+  let p = Number(localStorage.getItem("poinTasquirre") || 0);
+  p -= Number(amount);
+  if (p < 0) p = 0;
+  localStorage.setItem("poinTasquirre", p);
+  updatePoinUI();
+}
+
+/* Update tulisan poin di layar */
+function updatePoinUI() {
+  document.querySelector(".wallet-points").innerText =
+    `${Number(localStorage.getItem("poinTasquirre")).toLocaleString("id-ID")} poin`;
+}
+
 
 
 function comingSoon() {
@@ -1025,6 +1066,33 @@ function applyFilter() {
 
     searchResults.style.display = "block";
   });
+
+  /* === ENTER TO SELECT FIRST RESULT === */
+searchInput.addEventListener("keydown", function (e) {
+  if (e.key === "Enter") {
+    e.preventDefault(); // biar nggak reload halaman
+
+    const items = document.querySelectorAll(".search-item");
+
+    if (items.length > 0) {
+      // Ambil item pertama dari hasil pencarian
+      const first = items[0];
+
+      // Ambil text-nya
+      const selectedName = first.textContent.trim();
+
+      // Cari datanya dari layananList
+      const found = layananList.find(item =>
+        item.name.toLowerCase() === selectedName.toLowerCase()
+      );
+
+      if (found) {
+        goToSearchResult(found.link);
+      }
+    }
+  }
+});
+
 
   /* KLIK RESULT → REDIRECT */
   function goToSearchResult(link) {
@@ -1106,6 +1174,7 @@ function openTaskDetail() {
     window.location.href = "taskdetail_copywriting.html";
   }, 450);
 }
+
 
 
 </script>
